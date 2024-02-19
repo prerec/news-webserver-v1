@@ -56,10 +56,10 @@ func (a *NewsResponseRepository) UpdateNewsByID(id int, updatedNews models.News)
         SET title = $2
         WHERE id = $1
     `
-	}
-	_, err := a.storage.db.Exec(query, id, updatedNews.Title)
-	if err != nil {
-		return err
+		_, err := a.storage.db.Exec(query, id, updatedNews.Title)
+		if err != nil {
+			return err
+		}
 	}
 
 	if updatedNews.Content != "" {
@@ -68,10 +68,10 @@ func (a *NewsResponseRepository) UpdateNewsByID(id int, updatedNews models.News)
         SET content = $2
         WHERE id = $1
     `
-	}
-	_, err = a.storage.db.Exec(query, id, updatedNews.Content)
-	if err != nil {
-		return err
+		_, err := a.storage.db.Exec(query, id, updatedNews.Content)
+		if err != nil {
+			return err
+		}
 	}
 
 	if len(updatedNews.Categories) != 0 {
@@ -80,17 +80,17 @@ func (a *NewsResponseRepository) UpdateNewsByID(id int, updatedNews models.News)
         SET id = $2
         WHERE Id = $1
     `
-	}
-	// Удаляем существующие категории
-	_, err = a.storage.db.Exec("DELETE FROM newscategories WHERE NewsId = $1", id)
-	if err != nil {
-		return err
-	}
-	// Вставляем новые категории
-	for _, categoryID := range updatedNews.Categories {
-		_, err := a.storage.db.Exec("INSERT INTO newscategories (newsid, categoryid) VALUES ($1, $2)", id, categoryID)
+		// Удаляем существующие категории
+		_, err := a.storage.db.Exec("DELETE FROM newscategories WHERE NewsId = $1", id)
 		if err != nil {
 			return err
+		}
+		// Вставляем новые категории
+		for _, categoryID := range updatedNews.Categories {
+			_, err := a.storage.db.Exec("INSERT INTO newscategories (newsid, categoryid) VALUES ($1, $2)", id, categoryID)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
